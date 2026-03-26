@@ -1,23 +1,12 @@
-const twilio = require('twilio');
-
-const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-);
+// WhatsApp Service - Temporary Version (Without Twilio)
+// Jab Twilio setup ho jayega toh replace kar dena
 
 const sendWhatsAppMessage = async (phone, message) => {
-    try {
-        await client.messages.create({
-            body: message,
-            from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-            to: `whatsapp:+91${phone}`
-        });
-        console.log(`✅ WhatsApp message sent to ${phone}`);
-        return true;
-    } catch (error) {
-        console.error('❌ WhatsApp Error:', error);
-        return false;
-    }
+    // Console pe message dikha dega — actual WhatsApp nahi bhejega
+    console.log(`📱 [WhatsApp] To: +91${phone}`);
+    console.log(`📝 Message: ${message}`);
+    console.log(`💡 Tip: Add Twilio credentials to .env to enable real WhatsApp messages`);
+    return true;
 };
 
 module.exports = sendWhatsAppMessage;
