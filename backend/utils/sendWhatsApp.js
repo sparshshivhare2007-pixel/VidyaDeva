@@ -12,10 +12,10 @@ const sendWhatsAppMessage = async (phone, message) => {
             from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
             to: `whatsapp:+91${phone}`
         });
-        console.log(`WhatsApp message sent to ${phone}`);
+        console.log(`✅ WhatsApp message sent to ${phone}`);
         return true;
     } catch (error) {
-        console.error('WhatsApp Error:', error);
+        console.error('❌ WhatsApp Error:', error);
         return false;
     }
 };
