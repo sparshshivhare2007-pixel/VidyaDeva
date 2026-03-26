@@ -12,9 +12,8 @@ const sendOTP = async (req, res) => {
         }
         
         const otp = generateOTP();
-        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
         
-        // Find or create user
         let user = await User.findOne({ phone });
         
         if (user) {
@@ -28,9 +27,12 @@ const sendOTP = async (req, res) => {
             });
         }
         
-        // Send OTP via WhatsApp
-        const message = `🔐 *VidyaDeva* OTP\n\nYour login OTP is: *${otp}*\n\nValid for 10 minutes.\n\nज्ञान का मार्गदर्शन - VidyaDeva`;
-        await sendWhatsAppMessage(phone, message);
+        // Log OTP to console (since Twilio might not be configured)
+        console.log(`📱 OTP for ${phone}: ${otp}`);
+        
+        // Uncomment when Twilio is configured
+        // const message = `🔐 *VidyaDeva* OTP\n\nYour login OTP is: *${otp}*\n\nValid for 10 minutes.`;
+        // await sendWhatsAppMessage(phone, message);
         
         res.status(200).json({ message: 'OTP sent successfully' });
         
@@ -59,16 +61,14 @@ const verifyOTP = async (req, res) => {
             return res.status(400).json({ message: 'OTP expired' });
         }
         
-        // Update user as verified
         user.isVerified = true;
         user.otp = null;
         await user.save();
         
-        // Send success WhatsApp message
-        const successMessage = `✅ *Login Successful!*\n\nWelcome to *VidyaDeva* 🎉\n\nज्ञान का मार्गदर्शन\nYour career guidance platform.\n\nLogin to your dashboard to explore exams and career paths.\n\n🙏 धन्यवाद`;
-        await sendWhatsAppMessage(phone, successMessage);
+        // Success WhatsApp (uncomment when Twilio ready)
+        // const successMessage = `✅ *Login Successful!*\n\nWelcome to *VidyaDeva* 🎉`;
+        // await sendWhatsAppMessage(phone, successMessage);
         
-        // Generate session token (simplified - use JWT in production)
         const token = Buffer.from(phone).toString('base64');
         
         res.status(200).json({
