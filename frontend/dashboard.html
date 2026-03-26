@@ -617,8 +617,8 @@
     });
     
     document.getElementById('editProfileLink').addEventListener('click', (e) => {
-        e.preventDefault();
-        alert(currentLang === 'hi' ? 'प्रोफ़ाइल संपादन जल्द आ रहा है' : 'Profile editing coming soon');
+    e.preventDefault();
+    window.location.href = 'profile.html';
     });
     document.getElementById('viewAllLink').addEventListener('click', (e) => {
         e.preventDefault();
