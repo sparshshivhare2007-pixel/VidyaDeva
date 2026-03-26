@@ -10,7 +10,10 @@ const User = sequelize.define('User', {
     phone: {
         type: DataTypes.STRING(15),
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+            len: [10, 15]
+        }
     },
     otp_code: {
         type: DataTypes.STRING(6),
@@ -24,31 +27,70 @@ const User = sequelize.define('User', {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     },
-    // Profile fields (phase 2)
+    
+    // ========== PROFILE FIELDS ==========
     name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(100),
         allowNull: true
     },
     education: {
-        type: DataTypes.STRING,
-        allowNull: true
+        type: DataTypes.STRING(50),
+        allowNull: true,
+        comment: '10th, 12th, graduate, postgraduate, diploma'
     },
     stream: {
-        type: DataTypes.STRING,
-        allowNull: true
+        type: DataTypes.STRING(50),
+        allowNull: true,
+        comment: 'science, commerce, arts, other'
     },
     percentage: {
         type: DataTypes.DECIMAL(5, 2),
-        allowNull: true
+        allowNull: true,
+        validate: {
+            min: 0,
+            max: 100
+        }
     },
     state: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: true
     },
     district: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
+        allowNull: true
+    },
+    
+    // ========== ADD THESE NEW FIELDS ==========
+    skills: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue: [],
+        comment: 'Array of skills like Communication, Python, etc.'
+    },
+    interests: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        comment: 'Career interests like Government Job, Banking, etc.'
+    },
+    photo: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        comment: 'Base64 encoded profile photo'
+    },
+    
+    // ========== OPTIONAL: FOR FUTURE USE ==========
+    date_of_birth: {
+        type: DataTypes.DATEONLY,
+        allowNull: true
+    },
+    gender: {
+        type: DataTypes.ENUM('male', 'female', 'other'),
+        allowNull: true
+    },
+    category: {
+        type: DataTypes.ENUM('general', 'obc', 'sc', 'st', 'other'),
         allowNull: true
     }
+    
 }, {
     tableName: 'users',
     timestamps: true,
