@@ -1,10 +1,15 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const path = require('path');  // ← ye add kar
+
+// Load environment variables with explicit path
+dotenv.config({ path: path.join(__dirname, '.env') });  // ← ye change kar
+
 const cors = require('cors');
 const connectDB = require('./config/db');
 
-// Load environment variables
-dotenv.config();
+// Debug: Check if MONGO_URI is loading
+console.log('🔍 MONGO_URI:', process.env.MONGO_URI ? '✅ Loaded' : '❌ NOT LOADED');
 
 // Connect to database
 connectDB();
