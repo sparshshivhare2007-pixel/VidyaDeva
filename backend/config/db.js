@@ -1,33 +1,34 @@
 const { Sequelize } = require('sequelize');
-require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
+require('dotenv').config();
 
-const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
-    {
-        host: process.env.DB_HOST,
-        dialect: 'postgres',
-        logging: false, // console log band karne ke liye
-        pool: {
-            max: 5,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
+// Supabase PostgreSQL connection
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
         }
+    },
+    logging: false,
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
     }
-);
+});
 
 const connectDB = async () => {
     try {
         await sequelize.authenticate();
-        console.log('✅ PostgreSQL Connected');
+        console.log('✅ Supabase PostgreSQL Connected');
         
-        // Sync all models (development me use karo)
+        // Sync all models (create tables if not exist)
         await sequelize.sync({ alter: true });
         console.log('✅ Database synced');
     } catch (error) {
-        console.error('❌ PostgreSQL Error:', error);
+        console.error('❌ Database Error:', error);
         process.exit(1);
     }
 };
