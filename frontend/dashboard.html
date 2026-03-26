@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+=<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
@@ -86,7 +86,7 @@
         .nav-controls {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
         /* Language Switcher */
@@ -114,37 +114,146 @@
             color: #0A0F2A;
         }
 
-        .user-menu {
+        /* Profile Circle & Dropdown */
+        .profile-menu-container {
+            position: relative;
+        }
+
+        .profile-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #C084FC, #FBBF24);
             display: flex;
             align-items: center;
-            gap: 15px;
-            background: rgba(255,255,255,0.08);
-            padding: 6px 18px;
-            border-radius: 60px;
-        }
-
-        .phone-badge {
-            background: rgba(192,132,252,0.2);
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #C084FC;
-        }
-
-        .logout-btn {
-            background: none;
-            border: none;
-            color: #ff9f7c;
-            font-size: 18px;
+            justify-content: center;
             cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 40px;
-            transition: 0.2s;
+            overflow: hidden;
+            transition: 0.3s;
+            border: 2px solid rgba(255,255,255,0.3);
         }
 
-        .logout-btn:hover {
-            background: rgba(255,80,80,0.2);
+        .profile-circle:hover {
+            transform: scale(1.05);
+            border-color: #FBBF24;
+        }
+
+        .profile-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-initial {
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Dropdown Menu */
+        .profile-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 280px;
+            background: rgba(15, 25, 45, 0.98);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+            animation: fadeInDown 0.2s ease;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .dropdown-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #C084FC, #FBBF24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .dropdown-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dropdown-avatar .dropdown-initial {
+            font-size: 20px;
+            color: white;
+        }
+
+        .dropdown-info {
+            flex: 1;
+        }
+
+        .dropdown-info .dropdown-name {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .dropdown-phone {
+            font-size: 12px;
+            color: #94A3B8;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 8px 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #CBD5E1;
+            text-decoration: none;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(192,132,252,0.2);
+            color: #FBBF24;
+        }
+
+        .logout-item {
+            color: #F87171;
+        }
+
+        .logout-item:hover {
+            background: rgba(248,113,113,0.2);
+            color: #F87171;
         }
 
         /* Hero Section */
@@ -351,6 +460,7 @@
             .hero h2 { font-size: 24px; }
             .stat-card { padding: 18px; }
             .lang-btn { padding: 5px 12px; font-size: 12px; }
+            .nav-controls { gap: 12px; }
         }
     </style>
 </head>
@@ -373,10 +483,36 @@
                 <button class="lang-btn active" id="langHi" data-lang="hi">हिंदी</button>
                 <button class="lang-btn" id="langEn" data-lang="en">ENGLISH</button>
             </div>
-            <div class="user-menu">
-                <i class="fas fa-user-astronaut" style="color:#C084FC"></i>
-                <span class="phone-badge" id="userPhoneDisplay">+91 **********</span>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span id="logoutText">Exit</span></button>
+            
+            <!-- Profile Circle with Dropdown -->
+            <div class="profile-menu-container">
+                <div class="profile-circle" id="profileCircle">
+                    <img id="profileAvatar" src="" alt="Profile" style="display: none;">
+                    <span id="profileInitial" class="profile-initial">👤</span>
+                </div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-avatar">
+                            <img id="dropdownAvatar" src="" alt="" style="display: none;">
+                            <span id="dropdownInitial" class="dropdown-initial">👤</span>
+                        </div>
+                        <div class="dropdown-info">
+                            <div class="dropdown-name" id="dropdownName">Guest User</div>
+                            <div class="dropdown-phone" id="dropdownPhone">+91 ******</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" id="editProfileBtn" class="dropdown-item">
+                        <i class="fas fa-user-edit"></i> <span id="editProfileText">Edit Profile</span>
+                    </a>
+                    <a href="#" id="viewProfileBtn" class="dropdown-item">
+                        <i class="fas fa-id-card"></i> <span id="viewProfileText">View Profile</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" id="logoutDropdownBtn" class="dropdown-item logout-item">
+                        <i class="fas fa-sign-out-alt"></i> <span id="logoutDropdownText">Logout</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -388,11 +524,11 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="stats-grid">
-        <div class="stat-card">
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card" id="profileCompletionCard">
             <div class="stat-icon"><i class="fas fa-id-card"></i></div>
             <h3 id="statProfileTitle">प्रोफ़ाइल पूर्णता</h3>
-            <div class="stat-progress"><div class="progress-fill"></div></div>
+            <div class="stat-progress"><div class="progress-fill" id="progressFill"></div></div>
             <p id="statProfileDesc">68% पूर्ण • अगला कदम: शैक्षणिक विवरण जोड़ें</p>
             <a href="#" class="stat-link" id="editProfileLink"><span id="updateNowText">अभी अपडेट करें</span> →</a>
         </div>
@@ -491,7 +627,7 @@
             heroGreeting: "🙏 नमस्ते,",
             heroDesc: "आपकी प्रोफाइल के आधार पर हमने आपके लिए सर्वश्रेष्ठ करियर पथ चुने हैं। नीचे देखें और आगे बढ़ें।",
             statProfileTitle: "प्रोफ़ाइल पूर्णता",
-            statProfileDesc: "68% पूर्ण • अगला कदम: शैक्षणिक विवरण जोड़ें",
+            statProfileDesc: "% पूर्ण • अगला कदम: शैक्षणिक विवरण जोड़ें",
             updateNowText: "अभी अपडेट करें",
             statExamsTitle: "मैचिंग परीक्षाएँ",
             statExamsDesc: "UP, केंद्रीय, राज्य स्तर",
@@ -503,6 +639,9 @@
             recBadge: "AI मैच स्कोर के आधार पर",
             footerText: "विद्यादेवा — हर विद्यार्थी का मार्गदर्शक | सभी सरकारी योजनाएँ एवं परीक्षाएँ एक स्थान पर",
             footerTagline: "⚡ शक्ति, ज्ञान, मार्गदर्शन",
+            editProfileText: "प्रोफ़ाइल संपादित करें",
+            viewProfileText: "प्रोफ़ाइल देखें",
+            logoutDropdownText: "लॉगआउट",
             exams: [
                 { name: "SSC CHSL 2026", match: 94, detail: "12वीं पास, सामान्य बुद्धिमत्ता", lastDate: "15 मई 2026", level: "केंद्रीय" },
                 { name: "UP Police Constable", match: 89, detail: "12वीं पास, शारीरिक दक्षता", lastDate: "30 जून 2026", level: "राज्य (UP)" },
@@ -516,7 +655,7 @@
             heroGreeting: "🙏 Namaste,",
             heroDesc: "Based on your profile, we have selected the best career paths for you. Check below and move forward.",
             statProfileTitle: "Profile Completion",
-            statProfileDesc: "68% Complete • Next step: Add educational details",
+            statProfileDesc: "% Complete • Next step: Add educational details",
             updateNowText: "Update Now",
             statExamsTitle: "Matching Exams",
             statExamsDesc: "UP, Central, State Level",
@@ -528,6 +667,9 @@
             recBadge: "Based on AI Match Score",
             footerText: "VidyaDeva — Guide for Every Student | All Government Schemes & Exams at One Place",
             footerTagline: "⚡ Power, Knowledge, Guidance",
+            editProfileText: "Edit Profile",
+            viewProfileText: "View Profile",
+            logoutDropdownText: "Logout",
             exams: [
                 { name: "SSC CHSL 2026", match: 94, detail: "12th Pass, General Intelligence", lastDate: "15 May 2026", level: "Central" },
                 { name: "UP Police Constable", match: 89, detail: "12th Pass, Physical Efficiency", lastDate: "30 June 2026", level: "State (UP)" },
@@ -538,6 +680,106 @@
     };
 
     let currentLang = "hi";
+
+    // ======================== PROFILE FUNCTIONS ========================
+    
+    function checkProfileComplete() {
+        const savedProfile = localStorage.getItem('userProfile');
+        if (!savedProfile) return false;
+        const profile = JSON.parse(savedProfile);
+        const required = ['fullName', 'education', 'stream', 'state'];
+        for (let field of required) {
+            if (!profile[field] || profile[field] === '') return false;
+        }
+        return true;
+    }
+
+    function calculateProfilePercentage() {
+        const savedProfile = localStorage.getItem('userProfile');
+        if (!savedProfile) return 0;
+        const profile = JSON.parse(savedProfile);
+        const fields = ['fullName', 'education', 'stream', 'percentage', 'state', 'skills', 'interests', 'photo'];
+        let filled = 0;
+        for (let field of fields) {
+            if (profile[field] && profile[field] !== '' && 
+                !(Array.isArray(profile[field]) && profile[field].length === 0)) {
+                filled++;
+            }
+        }
+        return Math.round((filled / fields.length) * 100);
+    }
+
+    function loadProfileData() {
+        const savedProfile = localStorage.getItem('userProfile');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        let profilePhoto = null;
+        let profileName = '';
+        let profilePhone = user.phone || '';
+        
+        if (savedProfile) {
+            const profile = JSON.parse(savedProfile);
+            profilePhoto = profile.photo;
+            profileName = profile.fullName || '';
+        }
+        
+        // Update profile circle
+        const profileImg = document.getElementById('profileAvatar');
+        const profileInitial = document.getElementById('profileInitial');
+        
+        if (profilePhoto && profilePhoto !== '') {
+            profileImg.src = profilePhoto;
+            profileImg.style.display = 'block';
+            profileInitial.style.display = 'none';
+        } else {
+            profileImg.style.display = 'none';
+            profileInitial.style.display = 'flex';
+            profileInitial.innerText = profileName ? profileName.charAt(0).toUpperCase() : '👤';
+        }
+        
+        // Update dropdown
+        const dropdownImg = document.getElementById('dropdownAvatar');
+        const dropdownInitial = document.getElementById('dropdownInitial');
+        const dropdownName = document.getElementById('dropdownName');
+        const dropdownPhone = document.getElementById('dropdownPhone');
+        
+        if (profilePhoto && profilePhoto !== '') {
+            dropdownImg.src = profilePhoto;
+            dropdownImg.style.display = 'block';
+            dropdownInitial.style.display = 'none';
+        } else {
+            dropdownImg.style.display = 'none';
+            dropdownInitial.style.display = 'flex';
+            dropdownInitial.innerText = profileName ? profileName.charAt(0).toUpperCase() : '👤';
+        }
+        
+        dropdownName.innerText = profileName || (currentLang === 'hi' ? 'अतिथि उपयोगकर्ता' : 'Guest User');
+        dropdownPhone.innerText = `+91 ${profilePhone.slice(0,5)}*****`;
+        
+        // Update hero name
+        document.getElementById('userName').innerText = profileName || (currentLang === 'hi' ? 'योद्धा' : 'Warrior');
+        
+        // Update profile completion card visibility
+        const isComplete = checkProfileComplete();
+        const profileCard = document.getElementById('profileCompletionCard');
+        const progressPercent = calculateProfilePercentage();
+        
+        if (profileCard) {
+            if (isComplete) {
+                profileCard.style.display = 'none';
+            } else {
+                profileCard.style.display = 'block';
+                const progressFill = document.getElementById('progressFill');
+                const statDesc = document.getElementById('statProfileDesc');
+                if (progressFill) progressFill.style.width = `${progressPercent}%`;
+                if (statDesc) {
+                    statDesc.innerText = currentLang === 'hi' 
+                        ? `${progressPercent}% पूर्ण • अगला कदम: शैक्षणिक विवरण जोड़ें`
+                        : `${progressPercent}% Complete • Next step: Add educational details`;
+                }
+            }
+        }
+    }
 
     function renderExams(lang) {
         const examsGrid = document.getElementById('examsList');
@@ -565,11 +807,9 @@
         const c = content[lang];
         
         document.getElementById('logoSub').innerText = c.logoSub;
-        document.getElementById('logoutText').innerText = c.logoutText;
-        document.getElementById('heroGreeting').innerHTML = `${c.heroGreeting} <span id="userName">योद्धा</span>`;
+        document.getElementById('heroGreeting').innerHTML = `${c.heroGreeting} <span id="userName">${document.getElementById('userName').innerText}</span>`;
         document.getElementById('heroDesc').innerText = c.heroDesc;
         document.getElementById('statProfileTitle').innerText = c.statProfileTitle;
-        document.getElementById('statProfileDesc').innerText = c.statProfileDesc;
         document.getElementById('updateNowText').innerText = c.updateNowText;
         document.getElementById('statExamsTitle').innerText = c.statExamsTitle;
         document.getElementById('statExamsDesc').innerText = c.statExamsDesc;
@@ -581,8 +821,22 @@
         document.getElementById('recBadge').innerText = c.recBadge;
         document.getElementById('footerText').innerText = c.footerText;
         document.getElementById('footerTagline').innerHTML = c.footerTagline;
+        document.getElementById('editProfileText').innerText = c.editProfileText;
+        document.getElementById('viewProfileText').innerText = c.viewProfileText;
+        document.getElementById('logoutDropdownText').innerText = c.logoutDropdownText;
         
         renderExams(lang);
+        
+        // Update profile completion description if card visible
+        if (!checkProfileComplete()) {
+            const progressPercent = calculateProfilePercentage();
+            const statDesc = document.getElementById('statProfileDesc');
+            if (statDesc) {
+                statDesc.innerText = lang === 'hi' 
+                    ? `${progressPercent}% पूर्ण • अगला कदम: शैक्षणिक विवरण जोड़ें`
+                    : `${progressPercent}% Complete • Next step: Add educational details`;
+            }
+        }
         
         // Active button style
         document.getElementById('langHi').classList.remove('active');
@@ -593,37 +847,66 @@
         localStorage.setItem('preferredLang', lang);
     }
 
-    // ======================== AUTH & LOGIC ========================
+    // ======================== AUTH & EVENT LISTENERS ========================
+    
     const token = localStorage.getItem('token');
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
     const phone = userData.phone || '**********';
     document.getElementById('userPhoneDisplay').innerText = `+91 ${phone.slice(0,5)}*****`;
     
-    const userNameSpan = document.getElementById('userName');
-    userNameSpan.innerText = "Sparsh";
-    
     // Load saved language preference
     const savedLang = localStorage.getItem('preferredLang') || 'hi';
     updateUILanguage(savedLang);
+    loadProfileData();
     
     // Language switchers
     document.getElementById('langHi').addEventListener('click', () => updateUILanguage('hi'));
     document.getElementById('langEn').addEventListener('click', () => updateUILanguage('en'));
     
-    document.getElementById('logoutBtn').addEventListener('click', () => {
+    // Profile dropdown toggle
+    const profileCircle = document.getElementById('profileCircle');
+    const profileDropdown = document.getElementById('profileDropdown');
+    
+    profileCircle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('show');
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!profileCircle.contains(e.target) && !profileDropdown.contains(e.target)) {
+            profileDropdown.classList.remove('show');
+        }
+    });
+    
+    // Dropdown buttons
+    document.getElementById('editProfileBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'profile.html';
+    });
+    
+    document.getElementById('viewProfileBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'profile.html';
+    });
+    
+    document.getElementById('logoutDropdownBtn').addEventListener('click', (e) => {
+        e.preventDefault();
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('userProfile');
         window.location.href = 'index.html';
     });
     
     document.getElementById('editProfileLink').addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.href = 'profile.html';
+        e.preventDefault();
+        window.location.href = 'profile.html';
     });
+    
     document.getElementById('viewAllLink').addEventListener('click', (e) => {
         e.preventDefault();
         alert(currentLang === 'hi' ? 'सभी परीक्षाएँ जल्द उपलब्ध' : 'All exams coming soon');
     });
+    
     document.getElementById('exploreLink').addEventListener('click', (e) => {
         e.preventDefault();
         alert(currentLang === 'hi' ? 'करियर पथ जल्द उपलब्ध' : 'Career paths coming soon');
