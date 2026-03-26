@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>VidyaDeva — ज्ञान का मार्गदर्शन</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 20% 30%, #0A0F2A, #050A1A);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* 3D Canvas */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 30px;
+        }
+
+        /* Glassmorphism Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 28px;
+            background: rgba(15, 25, 45, 0.5);
+            backdrop-filter: blur(12px);
+            border-radius: 80px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 36px;
+            filter: drop-shadow(0 0 8px #C084FC);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .logo-text h1 {
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #E9D5FF, #FBBF24);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 1px;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Language Switcher */
+        .lang-switch {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 4px;
+        }
+
+        .lang-btn {
+            padding: 8px 20px;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.7);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #C084FC, #FBBF24);
+            color: #0A0F2A;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.08);
+            padding: 6px 18px;
+            border-radius: 60px;
+        }
+
+        .phone-badge {
+            background: rgba(192,132,252,0.2);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #C084FC;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #ff9f7c;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 40px;
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,80,80,0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(115deg, rgba(99, 55, 255, 0.2) 0%, rgba(251, 191, 36, 0.1) 100%);
+            backdrop-filter: blur(12px);
+            border-radius: 36px;
+            padding: 28px 36px;
+            margin-bottom: 48px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .hero h2 span {
+            background: linear-gradient(135deg, #FBBF24, #C084FC);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            color: #CBD5E1;
+            font-size: 16px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .stat-card {
+            background: rgba(15, 25, 45, 0.55);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(192,132,252,0.5);
+        }
+
+        .stat-icon {
+            font-size: 42px;
+            margin-bottom: 18px;
+            background: linear-gradient(145deg, #E9D5FF, #FBBF24);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .stat-card h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stat-progress {
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            height: 8px;
+            margin: 18px 0;
+        }
+
+        .progress-fill {
+            width: 68%;
+            height: 8px;
+            background: linear-gradient(90deg, #C084FC, #FBBF24);
+            border-radius: 30px;
+        }
+
+        .stat-link {
+            color: #FBBF24;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        /* Section Title */
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .section-title h3 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .badge-new {
+            background: #C084FC20;
+            padding: 6px 14px;
+            border-radius: 60px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #D9A7FF;
+        }
+
+        /* Exams Grid */
+        .exams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .exam-card {
+            background: rgba(10, 18, 35, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 20px;
+            border-left: 4px solid #FBBF24;
+            transition: 0.25s;
+        }
+
+        .exam-card:hover {
+            transform: scale(1.01);
+            background: rgba(20, 30, 55, 0.7);
+        }
+
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .match-badge {
+            background: #22C55E20;
+            color: #4ADE80;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .exam-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .exam-detail {
+            font-size: 14px;
+            color: #B9C7DD;
+            margin: 12px 0;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .exam-btn {
+            background: rgba(251,191,36,0.15);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 40px;
+            color: #FBBF24;
+            font-weight: 500;
+            margin-top: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        /* Footer */
+        .footer-links {
+            margin-top: 60px;
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            font-size: 13px;
+            color: #7E8A98;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 760px) {
+            .main-content { padding: 15px; }
+            .navbar { padding: 12px 18px; }
+            .hero h2 { font-size: 24px; }
+            .stat-card { padding: 18px; }
+            .lang-btn { padding: 5px 12px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="canvas-container"></div>
+
+<div class="main-content">
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <div class="logo-icon">🪷</div>
+            <div class="logo-text">
+                <h1>विद्यादेवा</h1>
+                <p id="logoSub">ज्ञान का मार्गदर्शन</p>
+            </div>
+        </div>
+        <div class="nav-controls">
+            <div class="lang-switch">
+                <button class="lang-btn active" id="langHi" data-lang="hi">हिंदी</button>
+                <button class="lang-btn" id="langEn" data-lang="en">ENGLISH</button>
+            </div>
+            <div class="user-menu">
+                <i class="fas fa-user-astronaut" style="color:#C084FC"></i>
+                <span class="phone-badge" id="userPhoneDisplay">+91 **********</span>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span id="logoutText">Exit</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+        <h2 id="heroGreeting">🙏 नमस्ते, <span id="userName">योद्धा</span></h2>
+        <p id="heroDesc">आपकी प्रोफाइल के आधार पर हमने आपके लिए सर्वश्रेष्ठ करियर पथ चुने हैं। नीचे देखें और आगे बढ़ें।</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-id-card"></i></div>
+            <h3 id="statProfileTitle">प्रोफ़ाइल पूर्णता</h3>
+            <div class="stat-progress"><div class="progress-fill"></div></div>
+            <p id="statProfileDesc">68% पूर्ण • अगला कदम: शैक्षणिक विवरण जोड़ें</p>
+            <a href="#" class="stat-link" id="editProfileLink"><span id="updateNowText">अभी अपडेट करें</span> →</a>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-graduation-cap"></i></div>
+            <h3 id="statExamsTitle">मैचिंग परीक्षाएँ</h3>
+            <p style="font-size: 32px; font-weight: 700; margin: 10px 0;">12+</p>
+            <p id="statExamsDesc">UP, Central, State Level</p>
+            <a href="#" class="stat-link" id="viewAllLink"><span id="viewAllText">सभी देखें</span> →</a>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-chalkboard-user"></i></div>
+            <h3 id="statCareerTitle">करियर पथ</h3>
+            <p id="statCareerDesc">प्रशासनिक, बैंकिंग, रेलवे, शिक्षक</p>
+            <a href="#" class="stat-link" id="exploreLink"><span id="exploreText">एक्सप्लोर करें</span> →</a>
+        </div>
+    </div>
+
+    <!-- Recommended Exams Section -->
+    <div class="section-title">
+        <h3 id="recTitle">🎯 आपके लिए अनुशंसित परीक्षाएँ</h3>
+        <div class="badge-new" id="recBadge">AI मैच स्कोर के आधार पर</div>
+    </div>
+
+    <div class="exams-grid" id="examsList"></div>
+
+    <div class="footer-links">
+        <p id="footerText">विद्यादेवा — हर विद्यार्थी का मार्गदर्शक | सभी सरकारी योजनाएँ एवं परीक्षाएँ एक स्थान पर</p>
+        <p style="margin-top: 12px;" id="footerTagline">⚡ शक्ति, ज्ञान, मार्गदर्शन</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    // ======================== 3D BACKGROUND ========================
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.background = null;
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 1.5, 12);
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 1400;
+    const posArray = new Float32Array(particlesCount * 3);
+    for(let i = 0; i < particlesCount * 3; i += 3) {
+        posArray[i] = (Math.random() - 0.5) * 30;
+        posArray[i+1] = (Math.random() - 0.5) * 18;
+        posArray[i+2] = (Math.random() - 0.5) * 25 - 10;
+    }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const particlesMaterial = new THREE.PointsMaterial({
+        size: 0.08,
+        color: 0xc084fc,
+        transparent: true,
+        opacity: 0.5,
+        blending: THREE.AdditiveBlending
+    });
+    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particlesMesh);
+
+    const torusGeo = new THREE.TorusGeometry(2.4, 0.08, 64, 300);
+    const torusMat = new THREE.MeshStandardMaterial({ color: 0xfbbf24, emissive: 0x7c3aed, emissiveIntensity: 0.5 });
+    const torus = new THREE.Mesh(torusGeo, torusMat);
+    scene.add(torus);
+
+    const ambientLight = new THREE.AmbientLight(0x404060);
+    scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xffffff, 1);
+    pointLight.position.set(5, 8, 7);
+    scene.add(pointLight);
+
+    function animate3D() {
+        requestAnimationFrame(animate3D);
+        torus.rotation.x += 0.005;
+        torus.rotation.y += 0.008;
+        particlesMesh.rotation.y += 0.0005;
+        particlesMesh.rotation.x += 0.0003;
+        renderer.render(scene, camera);
+    }
+    animate3D();
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // ======================== BILINGUAL DATA ========================
+    const content = {
+        hi: {
+            logoSub: "ज्ञान का मार्गदर्शन",
+            logoutText: "बाहर निकलें",
+            heroGreeting: "🙏 नमस्ते,",
+            heroDesc: "आपकी प्रोफाइल के आधार पर हमने आपके लिए सर्वश्रेष्ठ करियर पथ चुने हैं। नीचे देखें और आगे बढ़ें।",
+            statProfileTitle: "प्रोफ़ाइल पूर्णता",
+            statProfileDesc: "68% पूर्ण • अगला कदम: शैक्षणिक विवरण जोड़ें",
+            updateNowText: "अभी अपडेट करें",
+            statExamsTitle: "मैचिंग परीक्षाएँ",
+            statExamsDesc: "UP, केंद्रीय, राज्य स्तर",
+            viewAllText: "सभी देखें",
+            statCareerTitle: "करियर पथ",
+            statCareerDesc: "प्रशासनिक, बैंकिंग, रेलवे, शिक्षक",
+            exploreText: "एक्सप्लोर करें",
+            recTitle: "🎯 आपके लिए अनुशंसित परीक्षाएँ",
+            recBadge: "AI मैच स्कोर के आधार पर",
+            footerText: "विद्यादेवा — हर विद्यार्थी का मार्गदर्शक | सभी सरकारी योजनाएँ एवं परीक्षाएँ एक स्थान पर",
+            footerTagline: "⚡ शक्ति, ज्ञान, मार्गदर्शन",
+            exams: [
+                { name: "SSC CHSL 2026", match: 94, detail: "12वीं पास, सामान्य बुद्धिमत्ता", lastDate: "15 मई 2026", level: "केंद्रीय" },
+                { name: "UP Police Constable", match: 89, detail: "12वीं पास, शारीरिक दक्षता", lastDate: "30 जून 2026", level: "राज्य (UP)" },
+                { name: "IBPS Clerk 2026", match: 86, detail: "स्नातक, कंप्यूटर ज्ञान", lastDate: "10 जुलाई 2026", level: "केंद्रीय" },
+                { name: "UPPSC RO/ARO", match: 78, detail: "स्नातक, UP निवासी", lastDate: "25 अगस्त 2026", level: "राज्य (UP)" }
+            ]
+        },
+        en: {
+            logoSub: "Path of Knowledge",
+            logoutText: "Exit",
+            heroGreeting: "🙏 Namaste,",
+            heroDesc: "Based on your profile, we have selected the best career paths for you. Check below and move forward.",
+            statProfileTitle: "Profile Completion",
+            statProfileDesc: "68% Complete • Next step: Add educational details",
+            updateNowText: "Update Now",
+            statExamsTitle: "Matching Exams",
+            statExamsDesc: "UP, Central, State Level",
+            viewAllText: "View All",
+            statCareerTitle: "Career Paths",
+            statCareerDesc: "Administrative, Banking, Railways, Teaching",
+            exploreText: "Explore",
+            recTitle: "🎯 Recommended Exams For You",
+            recBadge: "Based on AI Match Score",
+            footerText: "VidyaDeva — Guide for Every Student | All Government Schemes & Exams at One Place",
+            footerTagline: "⚡ Power, Knowledge, Guidance",
+            exams: [
+                { name: "SSC CHSL 2026", match: 94, detail: "12th Pass, General Intelligence", lastDate: "15 May 2026", level: "Central" },
+                { name: "UP Police Constable", match: 89, detail: "12th Pass, Physical Efficiency", lastDate: "30 June 2026", level: "State (UP)" },
+                { name: "IBPS Clerk 2026", match: 86, detail: "Graduate, Computer Knowledge", lastDate: "10 July 2026", level: "Central" },
+                { name: "UPPSC RO/ARO", match: 78, detail: "Graduate, UP Resident", lastDate: "25 Aug 2026", level: "State (UP)" }
+            ]
+        }
+    };
+
+    let currentLang = "hi";
+
+    function renderExams(lang) {
+        const examsGrid = document.getElementById('examsList');
+        const examsData = content[lang].exams;
+        examsGrid.innerHTML = examsData.map(exam => `
+            <div class="exam-card">
+                <div class="exam-header">
+                    <span class="exam-title">📘 ${exam.name}</span>
+                    <span class="match-badge">${exam.match}% Match</span>
+                </div>
+                <div class="exam-detail">
+                    <span><i class="fas fa-graduation-cap"></i> ${exam.detail}</span>
+                    <span><i class="fas fa-calendar-alt"></i> ${exam.lastDate}</span>
+                    <span><i class="fas fa-globe"></i> ${exam.level}</span>
+                </div>
+                <button class="exam-btn" onclick="alert('${lang === 'hi' ? 'विवरण जल्द ही उपलब्ध' : 'Details coming soon'}')">
+                    ${lang === 'hi' ? 'विवरण देखें' : 'View Details'}
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function updateUILanguage(lang) {
+        currentLang = lang;
+        const c = content[lang];
+        
+        document.getElementById('logoSub').innerText = c.logoSub;
+        document.getElementById('logoutText').innerText = c.logoutText;
+        document.getElementById('heroGreeting').innerHTML = `${c.heroGreeting} <span id="userName">योद्धा</span>`;
+        document.getElementById('heroDesc').innerText = c.heroDesc;
+        document.getElementById('statProfileTitle').innerText = c.statProfileTitle;
+        document.getElementById('statProfileDesc').innerText = c.statProfileDesc;
+        document.getElementById('updateNowText').innerText = c.updateNowText;
+        document.getElementById('statExamsTitle').innerText = c.statExamsTitle;
+        document.getElementById('statExamsDesc').innerText = c.statExamsDesc;
+        document.getElementById('viewAllText').innerText = c.viewAllText;
+        document.getElementById('statCareerTitle').innerText = c.statCareerTitle;
+        document.getElementById('statCareerDesc').innerText = c.statCareerDesc;
+        document.getElementById('exploreText').innerText = c.exploreText;
+        document.getElementById('recTitle').innerHTML = c.recTitle;
+        document.getElementById('recBadge').innerText = c.recBadge;
+        document.getElementById('footerText').innerText = c.footerText;
+        document.getElementById('footerTagline').innerHTML = c.footerTagline;
+        
+        renderExams(lang);
+        
+        // Active button style
+        document.getElementById('langHi').classList.remove('active');
+        document.getElementById('langEn').classList.remove('active');
+        if (lang === 'hi') document.getElementById('langHi').classList.add('active');
+        else document.getElementById('langEn').classList.add('active');
+        
+        localStorage.setItem('preferredLang', lang);
+    }
+
+    // ======================== AUTH & LOGIC ========================
+    const token = localStorage.getItem('token');
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const phone = userData.phone || '**********';
+    document.getElementById('userPhoneDisplay').innerText = `+91 ${phone.slice(0,5)}*****`;
+    
+    const userNameSpan = document.getElementById('userName');
+    userNameSpan.innerText = "Sparsh";
+    
+    // Load saved language preference
+    const savedLang = localStorage.getItem('preferredLang') || 'hi';
+    updateUILanguage(savedLang);
+    
+    // Language switchers
+    document.getElementById('langHi').addEventListener('click', () => updateUILanguage('hi'));
+    document.getElementById('langEn').addEventListener('click', () => updateUILanguage('en'));
+    
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = 'index.html';
+    });
+    
+    document.getElementById('editProfileLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        alert(currentLang === 'hi' ? 'प्रोफ़ाइल संपादन जल्द आ रहा है' : 'Profile editing coming soon');
+    });
+    document.getElementById('viewAllLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        alert(currentLang === 'hi' ? 'सभी परीक्षाएँ जल्द उपलब्ध' : 'All exams coming soon');
+    });
+    document.getElementById('exploreLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        alert(currentLang === 'hi' ? 'करियर पथ जल्द उपलब्ध' : 'Career paths coming soon');
+    });
+</script>
+</body>
+</html>
