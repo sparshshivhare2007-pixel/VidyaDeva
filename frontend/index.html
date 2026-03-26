@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>VidyaDeva — ज्ञान का मार्गदर्शन</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 3D Particles Background -->
+    <div id="particles-bg"></div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <div class="login-card glassmorphism fade-in">
+            <!-- Lotus/Saraswati Symbol -->
+            <div class="symbol">
+                <div class="lotus">🪷</div>
+            </div>
+            
+            <!-- Brand Name -->
+            <h1 class="brand-name">
+                <span class="devanagari">विद्यादेवा</span>
+                <span class="english">VidyaDeva</span>
+            </h1>
+            <p class="tagline">ज्ञान का मार्गदर्शन</p>
+            <p class="sub-tagline">Your Path to Success</p>
+            
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="phone">Mobile Number</label>
+                    <div class="phone-input">
+                        <span class="country-code">+91</span>
+                        <input type="tel" id="phone" placeholder="9876543210" maxlength="10" autocomplete="off">
+                    </div>
+                </div>
+                
+                <div class="otp-section" id="otpSection" style="display: none;">
+                    <div class="input-group">
+                        <label for="otp">Enter OTP</label>
+                        <input type="text" id="otp" placeholder="6-digit OTP" maxlength="6">
+                    </div>
+                </div>
+                
+                <button type="button" id="sendOtpBtn" class="btn-primary gradient-btn">
+                    <span>Send OTP</span>
+                    <div class="btn-loader" style="display: none;"></div>
+                </button>
+                
+                <button type="button" id="verifyBtn" class="btn-primary gradient-btn" style="display: none;">
+                    <span>Verify & Login</span>
+                    <div class="btn-loader" style="display: none;"></div>
+                </button>
+            </form>
+            
+            <div id="message" class="message"></div>
+            
+            <div class="footer">
+                <p>By continuing, you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles background
+        particlesJS('particles-bg', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#ffffff' },
+                opacity: { value: 0.3, random: true },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, color: '#ffffff', opacity: 0.2 },
+                move: { enable: true, speed: 2 }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: { onhover: { enable: true, mode: 'repulse' } }
+            }
+        });
+    </script>
+</body>
+</html>
