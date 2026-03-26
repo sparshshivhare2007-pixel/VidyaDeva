@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const { User } = require('../models');
 const generateOTP = require('../utils/generateOTP');
 const sendWhatsAppMessage = require('../utils/sendWhatsApp');
 
@@ -14,25 +14,23 @@ const sendOTP = async (req, res) => {
         const otp = generateOTP();
         const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
         
-        let user = await User.findOne({ phone });
+        // Find or create user
+        let user = await User.findOne({ where: { phone } });
         
         if (user) {
-            user.otp = { code: otp, expiresAt };
+            user.otp_code = otp;
+            user.otp_expires = expiresAt;
             await user.save();
         } else {
             user = await User.create({
                 phone,
-                otp: { code: otp, expiresAt },
-                isVerified: false
+                otp_code: otp,
+                otp_expires: expiresAt,
+                is_verified: false
             });
         }
         
-        // Log OTP to console (since Twilio might not be configured)
         console.log(`📱 OTP for ${phone}: ${otp}`);
-        
-        // Uncomment when Twilio is configured
-        // const message = `🔐 *VidyaDeva* OTP\n\nYour login OTP is: *${otp}*\n\nValid for 10 minutes.`;
-        // await sendWhatsAppMessage(phone, message);
         
         res.status(200).json({ message: 'OTP sent successfully' });
         
@@ -47,27 +45,24 @@ const verifyOTP = async (req, res) => {
     try {
         const { phone, otp } = req.body;
         
-        const user = await User.findOne({ phone });
+        const user = await User.findOne({ where: { phone } });
         
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
         
-        if (!user.otp || user.otp.code !== otp) {
+        if (user.otp_code !== otp) {
             return res.status(400).json({ message: 'Invalid OTP' });
         }
         
-        if (new Date() > user.otp.expiresAt) {
+        if (new Date() > user.otp_expires) {
             return res.status(400).json({ message: 'OTP expired' });
         }
         
-        user.isVerified = true;
-        user.otp = null;
+        user.is_verified = true;
+        user.otp_code = null;
+        user.otp_expires = null;
         await user.save();
-        
-        // Success WhatsApp (uncomment when Twilio ready)
-        // const successMessage = `✅ *Login Successful!*\n\nWelcome to *VidyaDeva* 🎉`;
-        // await sendWhatsAppMessage(phone, successMessage);
         
         const token = Buffer.from(phone).toString('base64');
         
@@ -76,7 +71,7 @@ const verifyOTP = async (req, res) => {
             token,
             user: {
                 phone: user.phone,
-                isVerified: user.isVerified
+                isVerified: user.is_verified
             }
         });
         
