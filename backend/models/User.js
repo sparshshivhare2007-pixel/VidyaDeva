@@ -10,10 +10,7 @@ const User = sequelize.define('User', {
     phone: {
         type: DataTypes.STRING(15),
         allowNull: false,
-        unique: true,
-        validate: {
-            len: [10, 15]
-        }
+        unique: true
     },
     otp_code: {
         type: DataTypes.STRING(6),
@@ -27,7 +24,7 @@ const User = sequelize.define('User', {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     },
-    // Profile fields (phase 2 ke liye)
+    // Profile fields (phase 2)
     name: {
         type: DataTypes.STRING,
         allowNull: true
@@ -51,11 +48,6 @@ const User = sequelize.define('User', {
     district: {
         type: DataTypes.STRING,
         allowNull: true
-    },
-    skills: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: true,
-        defaultValue: []
     }
 }, {
     tableName: 'users',
