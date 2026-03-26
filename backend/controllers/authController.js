@@ -35,8 +35,8 @@ const sendOTP = async (req, res) => {
         res.status(200).json({ message: 'OTP sent successfully' });
         
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Send OTP Error:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
@@ -76,8 +76,8 @@ const verifyOTP = async (req, res) => {
         });
         
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Verify OTP Error:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
