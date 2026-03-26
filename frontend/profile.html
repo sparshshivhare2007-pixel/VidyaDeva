@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Complete Profile | VidyaDeva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 20% 30%, #0A0F2A, #050A1A);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Glassmorphism Card */
+        .profile-card {
+            background: rgba(15, 25, 45, 0.6);
+            backdrop-filter: blur(16px);
+            border-radius: 32px;
+            padding: 32px;
+            border: 1px solid rgba(255,255,255,0.15);
+            margin-bottom: 24px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #E9D5FF, #FBBF24);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #94A3B8;
+            font-size: 14px;
+        }
+
+        /* Profile Photo Section */
+        .photo-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #C084FC, #FBBF24);
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(192,132,252,0.4);
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-photo .placeholder {
+            font-size: 48px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .photo-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .photo-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .photo-btn:hover {
+            background: rgba(192,132,252,0.3);
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #CBD5E1;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            color: white;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #C084FC;
+            box-shadow: 0 0 10px rgba(192,132,252,0.3);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* Skills Tags */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .skill-tag {
+            background: rgba(192,132,252,0.2);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skill-tag i {
+            cursor: pointer;
+            font-size: 12px;
+            color: #F87171;
+        }
+
+        .skill-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .skill-input-group input {
+            flex: 1;
+        }
+
+        .add-skill-btn {
+            background: linear-gradient(135deg, #C084FC, #FBBF24);
+            border: none;
+            padding: 0 20px;
+            border-radius: 16px;
+            color: #0A0F2A;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            margin-bottom: 32px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #C084FC, #FBBF24);
+            border-radius: 30px;
+            transition: width 0.3s;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #C084FC, #FBBF24);
+            border: none;
+            border-radius: 24px;
+            color: #0A0F2A;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(192,132,252,0.4);
+        }
+
+        .skip-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 24px;
+            color: #94A3B8;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: #F87171;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .profile-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-card">
+            <div class="header">
+                <h1>📝 Complete Your Profile</h1>
+                <p>यह जानकारी आपके लिए सही करियर पथ चुनने में मदद करेगी</p>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="progress-label">
+                    <span>Profile Completion</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- Profile Photo -->
+            <div class="photo-section">
+                <div class="profile-photo" id="profilePhoto" onclick="document.getElementById('photoInput').click()">
+                    <div class="placeholder" id="photoPlaceholder">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <img id="profileImg" style="display: none;">
+                </div>
+                <div class="photo-buttons">
+                    <button class="photo-btn" onclick="openGallery()"><i class="fas fa-image"></i> Gallery</button>
+                    <button class="photo-btn" onclick="openCamera()"><i class="fas fa-camera"></i> Camera</button>
+                </div>
+                <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+            </div>
+
+            <!-- Form -->
+            <form id="profileForm">
+                <div class="form-group">
+                    <label>Full Name <span style="color: #FBBF24;">*</span></label>
+                    <input type="text" id="fullName" placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label>Education Level <span style="color: #FBBF24;">*</span></label>
+                    <select id="education">
+                        <option value="">Select</option>
+                        <option value="10th">10th Pass</option>
+                        <option value="12th">12th Pass</option>
+                        <option value="graduate">Graduate</option>
+                        <option value="postgraduate">Post Graduate</option>
+                        <option value="diploma">Diploma</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Stream <span style="color: #FBBF24;">*</span></label>
+                    <select id="stream">
+                        <option value="">Select</option>
+                        <option value="science">Science (PCM/PCB)</option>
+                        <option value="commerce">Commerce</option>
+                        <option value="arts">Arts/Humanities</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Percentage / CGPA</label>
+                    <input type="number" id="percentage" step="0.01" placeholder="e.g., 85.5 or 8.5 CGPA">
+                </div>
+
+                <div class="form-group">
+                    <label>State <span style="color: #FBBF24;">*</span></label>
+                    <select id="state">
+                        <option value="">Select State</option>
+                        <option value="uttar pradesh">Uttar Pradesh</option>
+                        <option value="bihar">Bihar</option>
+                        <option value="madhya pradesh">Madhya Pradesh</option>
+                        <option value="rajasthan">Rajasthan</option>
+                        <option value="maharashtra">Maharashtra</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Skills (Add your skills)</label>
+                    <div class="skill-input-group">
+                        <input type="text" id="skillInput" placeholder="e.g., Communication, Python, MS Office">
+                        <button type="button" class="add-skill-btn" onclick="addSkill()">+ Add</button>
+                    </div>
+                    <div class="skills-container" id="skillsContainer"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Career Interests (Optional)</label>
+                    <textarea id="interests" rows="2" placeholder="What career fields interest you? e.g., Government Job, Banking, Teaching, Engineering..."></textarea>
+                </div>
+
+                <button type="button" class="btn-primary" onclick="saveProfile()">
+                    <i class="fas fa-save"></i> Save Profile & Continue
+                </button>
+                <button type="button" class="skip-btn" onclick="skipProfile()">
+                    Skip for now
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let skillsList = [];
+        let profileImageBase64 = null;
+
+        // Load existing profile data
+        function loadExistingProfile() {
+            const saved = localStorage.getItem('userProfile');
+            if (saved) {
+                const profile = JSON.parse(saved);
+                document.getElementById('fullName').value = profile.fullName || '';
+                document.getElementById('education').value = profile.education || '';
+                document.getElementById('stream').value = profile.stream || '';
+                document.getElementById('percentage').value = profile.percentage || '';
+                document.getElementById('state').value = profile.state || '';
+                document.getElementById('interests').value = profile.interests || '';
+                skillsList = profile.skills || [];
+                renderSkills();
+                if (profile.photo) {
+                    profileImageBase64 = profile.photo;
+                    document.getElementById('profileImg').src = profile.photo;
+                    document.getElementById('profileImg').style.display = 'block';
+                    document.getElementById('photoPlaceholder').style.display = 'none';
+                }
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            let filled = 0;
+            const total = 7;
+            if (document.getElementById('fullName').value) filled++;
+            if (document.getElementById('education').value) filled++;
+            if (document.getElementById('stream').value) filled++;
+            if (document.getElementById('state').value) filled++;
+            if (skillsList.length > 0) filled++;
+            if (document.getElementById('percentage').value) filled++;
+            if (profileImageBase64) filled++;
+            const percent = Math.round((filled / total) * 100);
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('progressFill').style.width = `${percent}%`;
+        }
+
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileImageBase64 = e.target.result;
+                    document.getElementById('profileImg').src = profileImageBase64;
+                    document.getElementById('profileImg').style.display = 'block';
+                    document.getElementById('photoPlaceholder').style.display = 'none';
+                    updateProgress();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function openGallery() {
+            document.getElementById('photoInput').click();
+        }
+
+        function openCamera() {
+            const input = document.getElementById('photoInput');
+            input.setAttribute('capture', 'environment');
+            input.click();
+            input.removeAttribute('capture');
+        }
+
+        function addSkill() {
+            const skillInput = document.getElementById('skillInput');
+            const skill = skillInput.value.trim();
+            if (skill && !skillsList.includes(skill)) {
+                skillsList.push(skill);
+                renderSkills();
+                skillInput.value = '';
+                updateProgress();
+            }
+        }
+
+        function removeSkill(index) {
+            skillsList.splice(index, 1);
+            renderSkills();
+            updateProgress();
+        }
+
+        function renderSkills() {
+            const container = document.getElementById('skillsContainer');
+            container.innerHTML = skillsList.map((skill, i) => `
+                <div class="skill-tag">
+                    ${skill} <i class="fas fa-times-circle" onclick="removeSkill(${i})"></i>
+                </div>
+            `).join('');
+        }
+
+        function saveProfile() {
+            const profile = {
+                fullName: document.getElementById('fullName').value,
+                education: document.getElementById('education').value,
+                stream: document.getElementById('stream').value,
+                percentage: document.getElementById('percentage').value,
+                state: document.getElementById('state').value,
+                skills: skillsList,
+                interests: document.getElementById('interests').value,
+                photo: profileImageBase64
+            };
+
+            // Validation
+            if (!profile.fullName || !profile.education || !profile.stream || !profile.state) {
+                alert('Please fill all required fields (*)');
+                return;
+            }
+
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+            
+            // Also update user in backend (API call)
+            updateProfileInBackend(profile);
+        }
+
+        async function updateProfileInBackend(profile) {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/user/profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        phone: user.phone,
+                        ...profile
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('Profile saved successfully!');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert('Profile saved locally. You can continue.');
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (error) {
+                console.error('Backend save failed, saved locally', error);
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        function skipProfile() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Add event listeners for progress
+        ['fullName', 'education', 'stream', 'percentage', 'state'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateProgress);
+            document.getElementById(id).addEventListener('change', updateProgress);
+        });
+
+        loadExistingProfile();
+    </script>
+</body>
+</html>
